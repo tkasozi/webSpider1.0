@@ -1,0 +1,211 @@
+for (std::map<ctmbstr, int>::iterator it = hash_map.begin(); it != hash_map.end(); ++it) {
+
+                                        ((strncmp(it->first, str, strlen(str)) == 0) ? NULL//printf("Duplicate link: %s\t%d\t%d\n", str, it->second, ID)
+                                                :
+                                                hash_map[str] = ID); //not working right
+                                    }
+//example from http://en.cppreference.com
+
+/*template<typename Key, typename T, typename Compare, typename Allocator>
+std::ostream& operator<<(std::ostream& stream,
+        const std::map<Key, T, Compare, Allocator>& map) {
+    stream << '{';
+    char comma[3] = {'\0', ' ', '\0'};
+    for (const auto& pair : map) {
+        stream << comma;
+        //print_item(stream, pair.first);
+        stream << ':';
+        // print_item(stream, pair.second);
+        comma[0] = ',';
+    }
+    stream << '}';
+    return stream;
+}*/
+
+
+/*int my_strlen(char* str){
+    int i = 0;
+    
+    while(*str++){
+        i++;
+    }
+    
+    return i;
+}*/
+
+/*int main(void) {
+
+    CURL* curl;
+    CURLcode result;
+
+    curl = curl_easy_init();
+    curl_easy_setopt(curl, CURLOPT_URL, "https://ar.wikipedia.org/wiki/%D8%B3%D9%8A_%D8%A5%D9%86_%D8%A5%D9%86_%D8%A7%D9%84%D8%B9%D8%B1%D8%A8%D9%8A%D8%A9?action=render");
+
+    result = curl_easy_perform(curl);
+
+    curl_easy_cleanup(curl);
+
+    return 0;
+}*/
+
+
+
+
+/*int main(int argc, char**argv) {
+    std::string html;
+
+    ofstream xmlHtml;
+
+
+    try {
+        XMLPlatformUtils::Initialize();
+    } catch (const XMLException& toCatch) {
+        // Do your failure processing here
+        return 1;
+    }
+
+    //    message.
+    char message[1024 * 1024] = {0};
+
+    char request[] = "GET /index.html HTTP/1.0\n"
+            "From: webCrawler1.0\nUser-Agent: Talik Kasozi  by webCrawler1.0\n\n";
+    int sockfd;
+    struct sockaddr_in serv_addr; //mem problem initial
+
+    std::queue<string> URL;
+
+    URL.push("http://www.example.com");
+    //URL.push("www.uml.edu");
+
+
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+        printf("ERROR opening socket");
+
+    memset(&serv_addr, 0, sizeof (serv_addr));
+
+    Conn* connector = new Conn();
+
+    std::cout << "Welcome Spider" << std::endl;
+
+    while (!URL.empty()) {
+
+        TCPStream *stream = connector->Connect(URL.front().c_str(), 80, &serv_addr, sockfd);
+
+
+        cout << URL.front() << " IP: " << stream->getPeerIP() << " Port No. " << stream->getPeerPort() << "\n" << endl;
+
+        stream->send(request);
+
+        stream->receive(message);
+
+        html.assign(message);
+
+        cout << CleanHTML(html) << endl;
+
+        xmlHtml.open("xmlHtml.html", ios::out);
+        xmlHtml << html;
+        URL.pop();
+    }
+
+
+    xmlHtml.close();
+
+
+    XMLPlatformUtils::Terminate();
+    return 0;
+}*/
+
+/*std::string CleanHTML(const std::string &html) {
+
+    // Initialize a Tidy document
+    TidyDoc tidyDoc = tidyCreate();
+    TidyBuffer tidyOutputBuffer = {0};
+
+    // Configure Tidy
+    // The flags tell Tidy to output XML and disable showing warnings
+    bool configSuccess = tidyOptSetBool(tidyDoc, TidyXmlOut, yes)
+            && tidyOptSetBool(tidyDoc, TidyQuiet, yes)
+            && tidyOptSetBool(tidyDoc, TidyNumEntities, yes)
+            && tidyOptSetBool(tidyDoc, TidyShowWarnings, no);
+
+    int tidyResponseCode = -1;
+
+    // Parse input
+    if (configSuccess)
+        tidyResponseCode = tidyParseString(tidyDoc, html.c_str());
+
+    // Process HTML
+    if (tidyResponseCode >= 0)
+        tidyResponseCode = tidyCleanAndRepair(tidyDoc);
+
+    // Output the HTML to our buffer
+    if (tidyResponseCode >= 0)
+        tidyResponseCode = tidySaveBuffer(tidyDoc, &tidyOutputBuffer);
+
+    // Any errors from Tidy?
+    if (tidyResponseCode < 0)
+        throw ("Tidy encountered an error while parsing an HTML response. Tidy response code: ");
+
+    // Grab the result from the buffer and then free Tidy's memory
+    std::string tidyResult = (char*) tidyOutputBuffer.bp;
+    tidyBufFree(&tidyOutputBuffer);
+    tidyRelease(tidyDoc);
+
+    return tidyResult;
+}*/
+
+/* 
+ * File:   tester.cc
+ * Author: Talik Kasozi <talik.aziizi@gmail.com>
+ *
+ * Created on May 12, 2015, 12:30 AM
+ */
+
+#include <cstdlib>
+#include <iostream>
+
+#include "Sspider.h"
+#include "TCPStream.h"
+#include <sys/socket.h>
+#include <sys/types.h>
+#include "Conn.h"
+
+using namespace std;
+
+/*
+ * 
+ */
+int main(int argc, char** argv) {
+
+    int sockfd;
+    string html;
+
+    struct sockaddr_in serv_addr; //mem problem initial
+
+    //    message.
+    char message[1024 * 1024] = {0};
+
+    char request[] = "GET  \n"
+            "From: webCrawler1.0\nUser-Agent:Sspider  by webCrawler1.0\n\n";
+
+    if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)//
+        printf("ERROR opening socket");
+
+    memset(&serv_addr, 0, sizeof (serv_addr));
+
+    Conn* connect = new Conn();
+
+    TCPStream *stream = connect->Connect("www.cnn.com", 80, &serv_addr, sockfd);
+
+    stream->send(request);
+
+    stream->receive(message);
+
+    html.assign(message);
+    
+    cout << html << endl;
+    
+    close(sockfd);
+
+    return 0;
+}
